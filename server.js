@@ -1,7 +1,8 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('ws');
-const { WebcastPushConnection } = require('tiktok-live-connector');
+// Nouveau nom du package officiel :
+const { WebcastPushConnection } = require('@tobiasmuecksch/tiktok-live-connector');
 
 const app = express();
 app.use(express.static('public'));
@@ -10,7 +11,7 @@ const server = http.createServer(app);
 const wss = new Server({ server });
 
 // ⚠️ REMPLACE PAR TON PSEUDO TIKTOK SANS LE @
-const TIKTOK_USERNAME = 'le_duc_3'; 
+const TIKTOK_USERNAME = 'ton_pseudo_tiktok'; 
 
 let tiktokConnection = new WebcastPushConnection(TIKTOK_USERNAME);
 
