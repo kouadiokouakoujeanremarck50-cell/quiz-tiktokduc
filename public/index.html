@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Culture — Côte d'Ivoire & Afrique</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --bg: #0b0b12;
+    --card-white: #f6f4ef;
+    --a-1: #ef3b56; --a-2: #c31c3a;
+    --b-1: #3d6fe0; --b-2: #213f9e;
+    --c-1: #f7ac2e; --c-2: #c97c10;
+    --d-1: #22b56f; --d-2: #0f8552;
+    --ci-orange: #f77f00; --ci-green: #009e60;
+    --gold: #ffd23d; --silver: #c9ced6; --bronze: #e0955a;
+    --text-dim: #9a97a8;
+  }
+  html, body {
+    background: var(--bg);
+    color: #fff;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    height: 100%;
+    overflow-x: hidden;
+  }
+  .phone {
+    max-width: 460px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: radial-gradient(circle at 50% 0%, #17131f 0%, #0b0b12 55%);
+    padding-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Topbar TikTok Style */
+  .topbar { display: flex; align-items: center; gap: 8px; padding: 14px 12px 6px; }
+  .host { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+  .avatar-round {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--ci-orange), var(--ci-green));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; flex-shrink: 0;
+    border: 2px solid #ffffff33;
+  }
+  .host-name { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .host-likes { font-size: 11px; color: var(--text-dim); }
+  .btn-follow {
+    background: linear-gradient(135deg, #ff5c7a, #ff2d55);
+    border: none; color: #fff; font-weight: 700; font-size: 12px;
+    padding: 7px 14px; border-radius: 20px; white-space: nowrap; cursor: pointer;
+  }
+  .viewers { display: flex; align-items: center; gap: 4px; background: #ffffff14; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .close-x { width: 30px; height: 30px; border-radius: 50%; background: #ffffff14; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; cursor: pointer; flex-shrink: 0; }
+
+  .metabar { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 4px; font-size: 13px; }
+  .game-title { display: flex; align-items: center; gap: 6px; font-weight: 800; background: #ffffff10; padding: 6px 10px; border-radius: 12px; }
+  .round-pill { background: #ffffff14; padding: 5px 12px; border-radius: 14px; font-weight: 600; font-size: 12px; }
+
+  .score-row { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 8px 12px 2px; }
+  .hearts { display: flex; align-items: center; gap: 5px; background: #ffffff10; padding: 6px 12px; border-radius: 16px; font-weight: 700; font-size: 13px; }
+  .live-badge { background: #ff2d4522; border: 1px solid #ff2d45; color: #ff5c72; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 16px; display: flex; align-items: center; gap: 5px; }
+  .dot-red { width: 6px; height: 6px; background: #ff2d45; border-radius: 50%; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .timerwrap { padding: 10px 14px 0; }
+  .timerbar-bg { height: 8px; border-radius: 6px; background: #ffffff14; overflow: hidden; position: relative; }
+  .timerbar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #ff5c3d, #ffd23d); transition: width .1s linear; }
+  .timer-label { text-align: center; font-size: 12px; color: var(--text-dim); margin-top: 4px; font-weight: 600; }
+
+  .tags { display: flex; gap: 8px; justify-content: center; padding: 12px 12px 0; }
+  .tag { font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 14px; }
+  .tag.cat { background: #2a2140; color: #c9b8ff; }
+  .tag.diff { background: #3a2a12; color: #ffcf7a; }
+
+  .qcard {
+    background: var(--card-white); color: #1a1a1a;
+    margin: 12px 14px; border-radius: 18px;
+    padding: 22px 18px; text-align: center; font-size: 18px; font-weight: 800; line-height: 1.35;
+    box-shadow: 0 8px 24px #0006; position: relative;
+  }
+  .speak-btn {
+    position: absolute; top: -10px; right: -6px;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--ci-orange), #ff2d55); border: 3px solid var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; cursor: pointer; color: #fff;
+  }
+
+  .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 6px 14px 4px; }
+  .opt {
+    position: relative; border-radius: 16px; padding: 12px 12px 10px;
+    min-height: 120px; overflow: hidden; cursor: pointer;
+    display: flex; flex-direction: column; transition: transform .15s, box-shadow .2s;
+  }
+  .opt:active { transform: scale(.97); }
+  .opt.correct-reveal { box-shadow: 0 0 0 3px #fff, 0 0 22px 4px #ffffffaa; }
+  .opt.A { background: linear-gradient(160deg, var(--a-1), var(--a-2)); }
+  .opt.B { background: linear-gradient(160deg, var(--b-1), var(--b-2)); }
+  .opt.C { background: linear-gradient(160deg, var(--c-1), var(--c-2)); }
+  .opt.D { background: linear-gradient(160deg, var(--d-1), var(--d-2)); }
+  .opt-watermark { position: absolute; right: 2px; bottom: -16px; font-size: 78px; font-weight: 900; color: #ffffff14; line-height: 1; pointer-events: none; }
+  .opt-top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .opt-letter-badge { font-size: 11px; font-weight: 800; background: #ffffff26; padding: 2px 7px; border-radius: 8px; }
+  .opt-count { background: #00000055; font-weight: 800; font-size: 13px; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .opt-text { font-weight: 800; font-size: 15px; margin: 8px 0 8px; text-shadow: 0 1px 4px #0004; }
+  .opt-avatars { margin-top: auto; display: flex; flex-wrap: wrap; gap: 4px; }
+  .mini-avatar {
+    width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800; color: #fff; border: 1.5px solid #ffffff55; flex-shrink: 0;
+  }
+  .mini-avatar.overflow { background: #00000066; }
+
+  .reveal-banner {
+    margin: 8px 14px 0; padding: 10px 14px; border-radius: 12px;
+    background: #ffffff12; border: 1px solid #ffffff22;
+    font-size: 13px; font-weight: 700; text-align: center; display: none;
+  }
+  .reveal-banner.show { display: block; }
+
+  .controls-row { display: flex; gap: 8px; padding: 12px 14px 2px; align-items: center; }
+  .toggle-btn {
+    flex-shrink: 0; font-size: 11px; font-weight: 700;
+    background: #ffffff14; border: 1px solid #ffffff22; color: #fff;
+    padding: 8px 10px; border-radius: 14px; cursor: pointer;
+  }
+  .toggle-btn.on { border-color: var(--ci-green); color: #4be3a0; background: #0f8552; }
+
+  .feed {
+    margin: 10px 14px 0; background: #ffffff08; border-radius: 14px; padding: 10px 12px;
+    height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; flex: 1;
+  }
+  .feed::-webkit-scrollbar { width: 4px; }
+  .feed::-webkit-scrollbar-thumb { background: #ffffff22; border-radius: 4px; }
+  .comment { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; animation: fadein .25s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .c-avatar {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff;
+  }
+  .c-body .c-name { font-weight: 700; color: #ffd27a; margin-right: 5px; }
+  .c-body .c-name.me { color: #7ad0ff; }
+  .c-body .c-msg { color: #ececec; }
+  .c-system { color: var(--text-dim); font-style: italic; font-size: 12.5px; }
+
+  .inputrow { display: flex; gap: 8px; padding: 10px 14px 0; align-items: center; }
+  .msg-input {
+    flex: 1; background: #ffffff14; border: 1px solid #ffffff22;
+    color: #fff; border-radius: 22px; padding: 11px 16px; font-size: 14px; outline: none;
+  }
+  .msg-input::placeholder { color: #8f8ba0; }
+  .send-btn {
+    background: linear-gradient(135deg, var(--ci-orange), #ff2d55);
+    border: none; color: #fff; width: 42px; height: 42px; border-radius: 50%;
+    font-size: 16px; flex-shrink: 0; cursor: pointer;
+  }
+  .hint { text-align: center; font-size: 11.5px; color: var(--text-dim); padding: 8px 20px 0; }
+
+  .endscreen { display: none; padding: 6px 14px 4px; }
+  .endscreen.show { display: block; }
+  .endscreen h2 { text-align: center; font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+  .endscreen .sub { text-align: center; font-size: 12.5px; color: var(--text-dim); margin-bottom: 16px; }
+  .podium { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .podium-card {
+    display: flex; align-items: center; gap: 12px;
+    background: #ffffff0d; border-radius: 16px; padding: 12px 14px; border: 1px solid #ffffff18;
+  }
+  .podium-card.rank1 { border-color: var(--gold); background: linear-gradient(90deg, #3a2f0e, #1a1710); }
+  .podium-card.rank2 { border-color: var(--silver); }
+  .podium-card.rank3 { border-color: var(--bronze); }
+  .medal { font-size: 26px; flex-shrink: 0; width: 34px; text-align: center; }
+  .podium-avatar {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; color: #fff;
+  }
+  .podium-info { flex: 1; min-width: 0; }
+  .podium-name { font-weight: 800; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .podium-pts { font-size: 12px; color: var(--text-dim); font-weight: 600; }
+  .podium-score { font-weight: 900; font-size: 16px; color: var(--gold); flex-shrink: 0; }
+
+  .others-title { font-size: 12.5px; font-weight: 800; color: var(--text-dim); margin: 4px 0 8px; text-transform: uppercase; letter-spacing: .03em; }
+  .others-list { display: flex; flex-direction: column; gap: 6px; max-height: 150px; overflow-y: auto; margin-bottom: 16px; }
+  .other-row {
+    display: flex; align-items: center; gap: 10px; font-size: 13.5px;
+    background: #ffffff08; border-radius: 10px; padding: 8px 10px;
+  }
+  .other-rank { width: 20px; flex-shrink: 0; color: var(--text-dim); font-weight: 700; font-size: 12px; }
+  .other-avatar {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 10px; color: #fff;
+  }
+  .other-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .other-pts { font-weight: 800; color: #fff; font-size: 13px; }
+  .empty-state { text-align: center; color: var(--text-dim); font-size: 13px; padding: 14px 0; }
+
+  .cta-row { display: flex; gap: 10px; }
+  .btn-primary, .btn-secondary {
+    flex: 1; border: none; border-radius: 16px; padding: 14px 10px; font-weight: 800; font-size: 13.5px; cursor: pointer;
+  }
+  .btn-primary { background: linear-gradient(135deg, var(--ci-orange), #ff2d55); color: #fff; }
+  .btn-secondary { background: #ffffff14; color: #fff; border: 1px solid #ffffff28; }
+  .btn-secondary.selected { background: #0f8552; border-color: var(--ci-green); }
+  .break-note { text-align: center; font-size: 12px; color: var(--text-dim); margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="topbar">
+    <div class="host">
+      <div class="avatar-round">🇨🇮</div>
+      <div>
+        <div class="host-name" id="hostName">Maureen ZI...</div>
+        <div class="host-likes">♥ <span id="likesCount">19.2K</span></div>
+      </div>
+    </div>
+    <button class="btn-follow">+ Suivre</button>
+    <div class="viewers">👥 <span id="viewerCount">285</span></div>
+    <div class="close-x">✕</div>
+  </div>
+
+  <div class="metabar">
+    <div class="game-title">🎮 Quiz Culture CI & Afrique</div>
+    <div class="round-pill" id="roundPill">Manche 1/15</div>
+  </div>
+
+  <div class="score-row">
+    <div class="hearts">♥ <span id="heartsCount">14.0k</span></div>
+    <div class="live-badge"><span class="dot-red"></span> LIVE quiz-culture</div>
+  </div>
+
+  <div id="gameArea">
+    <div class="timerwrap">
+      <div class="timerbar-bg"><div class="timerbar-fill" id="timerFill" style="width:100%"></div></div>
+      <div class="timer-label"><span id="timerLabel">15</span>s</div>
+    </div>
+
+    <div class="tags">
+      <div class="tag cat" id="tagCat">Culture</div>
+      <div class="tag diff" id="tagDiff">Facile</div>
+    </div>
+
+    <div class="qcard">
+      <button class="speak-btn" id="speakBtn" title="Écouter la question">🔊</button>
+      <span id="questionText">Chargement…</span>
+    </div>
+
+    <div class="answers" id="answersGrid"></div>
+
+    <div class="reveal-banner" id="revealBanner"></div>
+
+    <div class="controls-row">
+      <button class="toggle-btn on" id="autoSpeakToggle">🔊 Lecture auto</button>
+      <button class="toggle-btn" id="simToggle">🤖 Simuler public</button>
+    </div>
+  </div>
+
+  <div class="endscreen" id="endScreen">
+    <h2>🏁 Partie terminée !</h2>
+    <div class="sub">Voici le classement de cette partie</div>
+
+    <div class="podium" id="podium"></div>
+
+    <div id="othersWrap">
+      <div class="others-title">Autres participants</div>
+      <div class="others-list" id="othersList"></div>
+    </div>
+
+    <div class="cta-row">
+      <button class="btn-primary" id="restartBtn">🔄 Refaire une partie</button>
+      <button class="btn-secondary" id="pauseBtn">⏸️ Pause</button>
+    </div>
+    <div class="break-note" id="breakNote"></div>
+  </div>
+
+  <div class="feed" id="feed"></div>
+
+  <div class="inputrow">
+    <input type="text" class="msg-input" id="msgInput" placeholder="Répondez A, B, C ou D (ex: A)" autocomplete="off">
+    <button class="send-btn" id="sendBtn">➤</button>
+  </div>
+  <div class="hint">Tapez A, B, C ou D dans le tchat ou cliquez directement sur une option</div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  // --- GASTRONOMIE / CULTURE / GEOGRAPHIE ---
+  {cat:"Gastronomie", diff:"Facile", q:"Quel est le plat national traditionnel à base de banane plantain pilée en Côte d'Ivoire ?", opts:["Alloco","Attiéké","Foutou","Kedjenou"], correct:2},
+  {cat:"Gastronomie", diff:"Facile", q:"Quel aliment croquant est fait de bananes plantains frites en dés ?", opts:["Alloco","Attiéké","Foutou","Kedjenou"], correct:0},
+  {cat:"Gastronomie", diff:"Moyen", q:"L'attiéké est traditionnellement préparé à partir de quel aliment ?", opts:["Maïs","Igname","Manioc","Riz"], correct:2},
+  {cat:"Économie", diff:"Facile", q:"Quelle monnaie est utilisée en Côte d'Ivoire ?", opts:["Cedi","Naira","Franc CFA","Dollar"], correct:2},
+  {cat:"Patrimoine", diff:"Moyen", q:"Le masque dansant Zaouli, inscrit à l'UNESCO, est originaire de quel peuple de Côte d'Ivoire ?", opts:["Baoulé","Gouro","Sénoufo","Akan"], correct:1},
+  {cat:"Patrimoine", diff:"Moyen", q:"Dans quelle ville se trouve la Basilique Notre-Dame de la Paix ?", opts:["Abidjan","Yamoussoukro","Korhogo","Man"], correct:1},
+  {cat:"Politique", diff:"Facile", q:"Qui est le président de la République de Côte d'Ivoire ?", opts:["Un chanteur", "Alassane Ouattara", "Un footballeur", "Un écrivain"], correct:1},
+  {cat:"Géographie", diff:"Moyen", q:"Quel pays africain compte le plus de pyramides au monde ?", opts:["Égypte","Soudan","Éthiopie","Maroc"], correct:1},
+  {cat:"Géographie", diff:"Facile", q:"Quel est le plus long fleuve d'Afrique ?", opts:["Le Congo","Le Niger","Le Nil","Le Zambèze"], correct:2},
+  {cat:"Géographie", diff:"Facile", q:"Dans quel pays se trouve le Kilimandjaro ?", opts:["Kenya","Tanzanie","Ouganda","Éthiopie"], correct:1},
+  {cat:"Culture", diff:"Moyen", q:"La fête de l'Abissa est une tradition du peuple N'zima à :", opts:["Grand-Bassam","Man","Korhogo","Daloa"], correct:0},
+  {cat:"Langue", diff:"Facile", q:"Quelle est la langue officielle de la Côte d'Ivoire ?", opts:["L'anglais","Le français","Le portugais","L'arabe"], correct:1},
+
+  // --- SÉRIES IVOIRIENNES & ACTEURS ---
+  {cat:"Série Ivoire", diff:"Moyen", q:"Dans la célèbre série « C'est la vie », quel est le rôle principal exercé au centre de santé d'Agboville ?", opts:["Sage-femme","Directeur d'hôpital","Chirurgien","Pharmacien"], correct:0},
+  {cat:"Série Ivoire", diff:"Facile", q:"Quelle série culte ivoirienne met en scène la famille de Mambo et les péripéties du quartier ?", opts:["Ma Famille","Class'A","Brouteurs.com","Les Guignols d'Abidjan"], correct:0},
+  {cat:"Acteurs", diff:"Facile", q:"Quel célèbre acteur et comédien incarne le personnage du mari volage dans la série « Ma Famille » ?", opts:["Michel Gohou","Bohiri Michel","Gbi de Fer","Decothey"], correct:1},
+  {cat:"Acteurs", diff:"Moyen", q:"Quel comédien et humoriste ivoirien est célèbre pour son rôle dans « Le Parlement du Rire » ?", opts:["Michel Gohou","Adama Dahico","Kouya","Digbeu Cravate"], correct:0},
+
+  // --- ARTISTES & MUSIQUE ---
+  {cat:"Musique", diff:"Facile", q:"Le Coupé-Décalé est un genre musical né grâce à la diaspora de quel pays ?", opts:["Sénégal","Côte d'Ivoire","Mali","Cameroun"], correct:1},
+  {cat:"Musique", diff:"Moyen", q:"Le Zouglou est né dans quel milieu à l'origine ?", opts:["Les stades de football","Les foyers universitaires","Les églises","Les marchés"], correct:1},
+  {cat:"Artistes", diff:"Facile", q:"Quel artiste ivoirien est surnommé le « Roi du Coupé-Décalé » et le « Presi » ?", opts:["DJ Arafat","Serge Beynaud","Debordo Leekunfa","Molare"], correct:0},
+  {cat:"Artistes", diff:"Facile", q:"Quel groupe musical ivoirien est mondialement connu pour son titre « Premier Gaou » ?", opts:["Magic System","Les Patronne","Kiff No Beat","Espoir 2000"], correct:0},
+  {cat:"Artistes", diff:"Moyen", q:"Quelle chanteuse ivoirienne est célèbre pour ses hits Zouglou et Coupé-Décalé comme « Comme d'habitude » ?", opts:["Josey","Dobet Gnahoré","Affou Keita","Nayla"], correct:0},
+
+  // --- FOOTBALL & JOUEURS ---
+  {cat:"Football", diff:"Facile", q:"Quel joueur ivoirien a remporté le Ballon d'or africain à 4 reprises consécutives ?", opts:["Yaya Touré","Didier Drogba","Kolo Touré","Gervinho"], correct:0},
+  {cat:"Football", diff:"Facile", q:"Quel légendaire attaquant ivoirien a mené Chelsea à la victoire en Ligue des Champions en 2012 ?", opts:["Didier Drogba","Salomon Kalou","Wilfried Bony","Sébastien Haller"], correct:0},
+  {cat:"Football", diff:"Moyen", q:"Quel est le surnom officiel de l'équipe nationale de football de Côte d'Ivoire ?", opts:["Les Éléphants","Les Aigles","Les Leopards","Les Etalons"], correct:0}
+];
+
+const PARTIE_SIZE = 15;
+const ROUND_SECONDS = 15;
+
+let order = shuffle([...Array(QUESTIONS.length).keys()]);
+let qIndex = 0;
+let roundsCompleted = 0;
+let timeLeft = ROUND_SECONDS;
+let timerHandle = null;
+
+let votes = [0,0,0,0];
+let voterChoice = new Map();
+let revealed = false;
+
+let simEnabled = false;
+let simHandle = null;
+let autoSpeak = true;
+
+let partieScores = {};
+let partieParticipants = new Set();
+
+const letters = ["A","B","C","D"];
+const optClasses = ["A","B","C","D"];
+const fakeNames = ["BLM 💫","AMOIN CHRISTIANE","DAVID MAKE MANE","RUDY OBOU SERY","PETIT BIO ♻️","JUNIOR HILARYON","ELIAS SIBA 💡","MR GAGA","Sarah love 💜","Manuela Audrey ❤️"];
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function colorForName(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  const h = Math.abs(hash) % 360;
+  return `hsl(${h}, 65%, 45%)`;
+}
+
+function initialsFor(str) {
+  const parts = str.trim().split(" ");
+  if(parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return str.substring(0,2).toUpperCase();
+}
+
+const gameArea = document.getElementById("gameArea");
+const endScreen = document.getElementById("endScreen");
+const questionText = document.getElementById("questionText");
+const tagCat = document.getElementById("tagCat");
+const tagDiff = document.getElementById("tagDiff");
+const answersGrid = document.getElementById("answersGrid");
+const roundPill = document.getElementById("roundPill");
+const timerFill = document.getElementById("timerFill");
+const timerLabel = document.getElementById("timerLabel");
+const revealBanner = document.getElementById("revealBanner");
+const feed = document.getElementById("feed");
+const msgInput = document.getElementById("msgInput");
+const breakNote = document.getElementById("breakNote");
+
+function renderQuestion(){
+  gameArea.style.display = "";
+  endScreen.classList.remove("show");
+
+  const item = QUESTIONS[order[qIndex]];
+  questionText.textContent = item.q;
+  tagCat.textContent = item.cat;
+  tagDiff.textContent = item.diff;
+  roundPill.textContent = "Manche " + (roundsCompleted+1) + "/" + PARTIE_SIZE;
+
+  votes = [0,0,0,0];
+  voterChoice = new Map();
+  revealed = false;
+  revealBanner.classList.remove("show");
+  answersGrid.innerHTML = "";
+
+  item.opts.forEach((optText,i)=>{
+    const div = document.createElement("div");
+    div.className = "opt " + optClasses[i];
+    div.id = "opt-" + i;
+    div.innerHTML = 
+      '<div class="opt-watermark">' + letters[i] + '</div>' +
+      '<div class="opt-top">' +
+        '<span class="opt-letter-badge">' + letters[i] + '</span>' +
+        '<span class="opt-count" id="count-' + i + '">0</span>' +
+      '</div>' +
+      '<div class="opt-text">' + optText + '</div>' +
+      '<div class="opt-avatars" id="avatars-' + i + '"></div>';
+    div.addEventListener("click", ()=> castVote("Vous", i, true));
+    answersGrid.appendChild(div);
+  });
+
+  timeLeft = ROUND_SECONDS;
+  updateTimerUI();
+  clearInterval(timerHandle);
+  timerHandle = setInterval(tick, 100);
+
+  if(autoSpeak) speakQuestion();
+}
+
+function tick(){
+  timeLeft -= 0.1;
+  if(timeLeft<=0){
+    timeLeft = 0;
+    updateTimerUI();
+    clearInterval(timerHandle);
+    revealAnswer();
+    return;
+  }
+  updateTimerUI();
+}
+
+function updateTimerUI(){
+  const pct = Math.max(0,(timeLeft/ROUND_SECONDS)*100);
+  timerFill.style.width = pct + "%";
+  timerLabel.textContent = Math.ceil(timeLeft);
+}
+
+function castVote(name, optionIndex, isMe){
+  if(revealed) return;
+  if(voterChoice.has(name)) return;
+
+  voterChoice.set(name, {option:optionIndex, timeLeft:timeLeft});
+  votes[optionIndex]++;
+
+  document.getElementById("count-" + optionIndex).textContent = votes[optionIndex];
+
+  const avEl = document.getElementById("avatars-" + optionIndex);
+  const shown = avEl.children.length;
+  if(shown < 10){
+    const mini = document.createElement("div");
+    mini.className = "mini-avatar";
+    mini.style.background = colorForName(name);
+    mini.textContent = isMe ? "👤" : initialsFor(name);
+    avEl.appendChild(mini);
+  } else {
+    let overflow = avEl.querySelector(".overflow");
+    if(!overflow){
+      overflow = document.createElement("div");
+      overflow.className = "mini-avatar overflow";
+      avEl.appendChild(overflow);
+    }
+    overflow.textContent = "+" + (votes[optionIndex]-10);
+  }
+}
+
+function addComment(name, msg, isMe, isSystem){
+  const row = document.createElement("div");
+  row.className = "comment";
+
+  if(isSystem){
+    row.innerHTML = '<div class="c-body c-system">' + msg + '</div>';
+  } else {
+    row.innerHTML = 
+      '<div class="c-avatar" style="background:' + colorForName(name) + '">' + initialsFor(name) + '</div>' +
+      '<div class="c-body"><span class="c-name ' + (isMe?'me':'') + '">' + name + '</span><span class="c-msg">' + msg + '</span></div>';
+  }
+
+  feed.appendChild(row);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function handleSend(senderName, rawMsg, isMe){
+  if(!rawMsg) return;
+  addComment(senderName, rawMsg, isMe, false);
+
+  const clean = rawMsg.trim().toUpperCase();
+  const idx = letters.indexOf(clean);
+
+  if(idx !== -1){
+    castVote(senderName, idx, isMe);
+  }
+}
+
+function revealAnswer(){
+  revealed = true;
+  const item = QUESTIONS[order[qIndex]];
+
+  document.getElementById("opt-" + item.correct).classList.add("correct-reveal");
+
+  revealBanner.classList.add("show");
+  revealBanner.textContent = "✅ Bonne réponse : " + letters[item.correct] + ") " + item.opts[item.correct];
+
+  addComment("", "⏱️ Temps écoulé ! Bonne réponse : " + letters[item.correct] + ") " + item.opts[item.correct], false, true);
+
+  voterChoice.forEach((val, name)=>{
+    partieParticipants.add(name);
+    if(val.option === item.correct){
+      const pts = 100 + Math.round((val.timeLeft/ROUND_SECONDS)*50);
+      partieScores[name] = (partieScores[name]||0) + pts;
+    } else if(!(name in partieScores)){
+      partieScores[name] = 0;
+    }
+  });
+
+  roundsCompleted++;
+
+  setTimeout(()=>{
+    if(roundsCompleted >= PARTIE_SIZE){
+      endPartie();
+    } else {
+      nextRound();
+    }
+  }, 3500);
+}
+
+function nextRound(){
+  qIndex = (qIndex+1) % order.length;
+  renderQuestion();
+}
+
+function speakQuestion(){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+
+  const item = QUESTIONS[order[qIndex]];
+  const textToSpeak = `${item.q}. Réponse A: ${item.opts[0]}. Réponse B: ${item.opts[1]}. Réponse C: ${item.opts[2]}. Réponse D: ${item.opts[3]}`;
+
+  const utter = new SpeechSynthesisUtterance(textToSpeak);
+  utter.lang = "fr-FR";
+  utter.rate = 1.0;
+
+  const voices = window.speechSynthesis.getVoices();
+  const frVoice = voices.find(v => v.lang.startsWith('fr'));
+  if(frVoice) utter.voice = frVoice;
+
+  window.speechSynthesis.speak(utter);
+}
+
+function endPartie(){
+  clearInterval(simHandle);
+  simEnabled = false;
+  document.getElementById("simToggle").classList.remove("on");
+
+  gameArea.style.display = "none";
+  endScreen.classList.add("show");
+  breakNote.textContent = "";
+
+  const sorted = Object.entries(partieScores).sort((a,b)=> b[1]-a[1]);
+  const podiumEl = document.getElementById("podium");
+  const othersList = document.getElementById("othersList");
+  const othersWrap = document.getElementById("othersWrap");
+
+  podiumEl.innerHTML = "";
+  othersList.innerHTML = "";
+
+  if(sorted.length === 0){
+    podiumEl.innerHTML = '<div class="empty-state">Personne n\'a voté cette partie 😅<br>Relancez une partie pour départager les participants !</div>';
+    othersWrap.style.display = "none";
+  } else {
+    othersWrap.style.display = "block";
+    const medals = ["🥇","🥈","🥉"];
+    const ranks = ["rank1","rank2","rank3"];
+
+    sorted.slice(0,3).forEach(([name, pts], i)=>{
+      const card = document.createElement("div");
+      card.className = "podium-card " + ranks[i];
+      card.innerHTML = 
+        '<div class="medal">' + medals[i] + '</div>' +
+        '<div class="podium-avatar" style="background:' + colorForName(name) + '">' + initialsFor(name) + '</div>' +
+        '<div class="podium-info"><div class="podium-name">' + name + '</div><div class="podium-pts">Rang #' + (i+1) + '</div></div>' +
+        '<div class="podium-score">' + pts + ' pts</div>';
+      podiumEl.appendChild(card);
+    });
+
+    if(sorted.length > 3){
+      sorted.slice(3).forEach(([name, pts], i)=>{
+        const row = document.createElement("div");
+        row.className = "other-row";
+        row.innerHTML = 
+          '<div class="other-rank">#' + (i+4) + '</div>' +
+          '<div class="other-avatar" style="background:' + colorForName(name) + '">' + initialsFor(name) + '</div>' +
+          '<div class="other-name">' + name + '</div>' +
+          '<div class="other-pts">' + pts + ' pts</div>';
+        othersList.appendChild(row);
+      });
+    }
+  }
+
+  addComment("", "🏁 Fin de la partie ! " + (sorted[0] ? ("Victoire de " + sorted[0][0] + " avec " + sorted[0][1] + " pts 🎉") : "Aucun participant."), false, true);
+}
+
+function startNewPartie(){
+  order = shuffle([...Array(QUESTIONS.length).keys()]);
+  qIndex = 0;
+  roundsCompleted = 0;
+  partieScores = {};
+  partieParticipants = new Set();
+  document.getElementById("pauseBtn").classList.remove("selected");
+  breakNote.textContent = "";
+  renderQuestion();
+}
+
+document.getElementById("restartBtn").addEventListener("click", startNewPartie);
+document.getElementById("pauseBtn").addEventListener("click", (e)=>{
+  e.target.classList.add("selected");
+  breakNote.textContent = "😌 Pause activée. Cliquez sur « Refaire une partie » lorsque vous voulez relancer !";
+});
+
+function simulateOne(){
+  if(revealed) return;
+  const name = fakeNames[Math.floor(Math.random()*fakeNames.length)];
+  const letter = letters[Math.floor(Math.random()*4)].toLowerCase();
+  handleSend(name, letter, false);
+}
+
+document.getElementById("simToggle").addEventListener("click", (e)=>{
+  simEnabled = !simEnabled;
+  e.target.classList.toggle("on", simEnabled);
+  if(simEnabled){
+    simHandle = setInterval(simulateOne, 800);
+  } else{
+    clearInterval(simHandle);
+  }
+});
+
+document.getElementById("autoSpeakToggle").addEventListener("click",(e)=>{
+  autoSpeak = !autoSpeak;
+  e.target.classList.toggle("on", autoSpeak);
+  if(!autoSpeak && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+});
+
+document.getElementById("speakBtn").addEventListener("click", speakQuestion);
+
+document.getElementById("sendBtn").addEventListener("click", sendFromInput);
+msgInput.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter") sendFromInput();
+});
+
+function sendFromInput(){
+  const text = msgInput.value.trim();
+  if(!text) return;
+  handleSend("Vous", text, true);
+  msgInput.value = "";
+}
+
+// Connexion WebSocket automatique au serveur TikTok (Render / Glitch)
+const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+const ws = new WebSocket(`${protocol}//${window.location.host}`);
+
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  handleSend(data.user, data.comment, false);
+};
+
+ws.onopen = () => {
+  console.log("Connecté au serveur du Live TikTok !");
+};
+
+// Lancement initial du jeu
+renderQuestion();
+</script>
+</body>
+</html>
