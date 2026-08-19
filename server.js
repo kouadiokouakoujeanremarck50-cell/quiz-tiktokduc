@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('ws');
 // Nouveau nom du package officiel :
-const { WebcastPushConnection } = require('@tobiasmuecksch/tiktok-live-connector');
+const { WebcastPushConnection } = require('tiktok-live-connector');
 
 const app = express();
 app.use(express.static('public'));
